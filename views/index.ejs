@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Movie Search</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+
+    <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+    <div class="background">
+        <div class="vignette">
+            <div class="container">
+                <header>
+                    <h1>Movie Search</h1>
+                </header>
+                <main>
+                    <section class="search-section">
+                        <h2>Find Your Favorite Movies</h2>
+                        <form action="/movie" method="POST">
+                            <input type="text" name="movieName" placeholder="Enter movie name" required>
+                            <button type="submit">Search</button>
+                        </form>
+                        <% if (error) { %>
+                            <p class="error-message"><%= error %></p>
+                        <% } %>
+                    </section>
+                    <section class="info-section">
+                        <h2>About This Project</h2>
+                        <p>This project allows you to search for movies and view detailed information about them. It pulls data from the OMDB API to provide movie details such as title, year, genre, and more. Enter a movie name to get started!</p>
+                    </section>
+                </main>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
