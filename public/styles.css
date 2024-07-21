@@ -1,11 +1,11 @@
 :root {
-    --primary-color: #E3651D; /* Bright orange */
-    --secondary-color: #BF4C1F; /* Updated darker orange */
-    --background-color: rgba(0, 0, 0, 0.9); /* Dark background */
-    --text-color: #FFFFFF; /* White */
+    --primary-color: #E3651D;
+    --secondary-color: #BF4C1F;
+    --background-color: rgba(0, 0, 0, 0.9);
+    --text-color: #FFFFFF;
 }
 
-/* General Styles */
+
 body {
     margin: 0;
     padding: 0;
@@ -14,7 +14,7 @@ body {
     background-color: #000000;
 }
 
-/* Homepage Styles */
+
 .background {
     background: url('/images/image.png') no-repeat center center fixed;
     background-size: cover;
@@ -26,7 +26,7 @@ body {
 }
 
 .vignette {
-    background: rgba(0, 0, 0, 0.7); /* Darker shade for vignette effect */
+    background: rgba(0, 0, 0, 0.7);
     height: 100%;
     width: 100%;
     position: absolute;
@@ -46,7 +46,7 @@ body {
     text-align: center;
 }
 
-/* Responsive Design */
+
 @media (max-width: 768px) {
     .container {
         padding: 1rem;
@@ -112,16 +112,16 @@ main {
     font-size: 1rem;
     border: none;
     border-radius: 5px;
-    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color)); /* More noticeable gradient */
+    background: linear-gradient(45deg, var(--primary-color), var(--secondary-color));
     color: var(--text-color);
     cursor: pointer;
     transition: background 0.3s ease, transform 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Add shadow for depth */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .search-section button:hover {
     transform: scale(1.05);
-    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color)); /* Reverse gradient on hover */
+    background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
 }
 
 .search-section button:focus {
@@ -146,7 +146,7 @@ main {
     color: var(--text-color);
 }
 
-/* Movie Page Styles */
+
 .movie-background {
     background: url('/images/image.png') no-repeat center center fixed;
     background-size: cover;
@@ -179,12 +179,12 @@ main {
     width: 100%;
     max-width: 1200px;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5); /* Card shadow for depth */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .movie-card:hover {
     transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7); /* Enhanced shadow on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.7);
 }
 
 .movie-poster img {
@@ -213,7 +213,7 @@ main {
     color: var(--primary-color);
 }
 
-/* Loading Spinner */
+
 .loader {
     border: 8px solid rgba(255, 255, 255, 0.2);
     border-top: 8px solid var(--primary-color);
@@ -228,7 +228,7 @@ main {
     100% { transform: rotate(360deg); }
 }
 
-/* Adjusted Back to Homepage Button */
+
 a {
     display: inline-block;
     margin-top: 2rem;
@@ -242,7 +242,7 @@ a:hover {
     text-decoration: underline;
 }
 
-/* Footer Styles */
+
 footer {
     text-align: center;
     padding: 1rem;

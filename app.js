@@ -10,17 +10,17 @@ app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
 
-// Homepage route
+
 app.get('/', (req, res) => {
     res.render('index', { error: null });
 });
 
-// Movie search route
+
 app.post('/movie', async (req, res) => {
     const movieName = req.body.movieName;
     try {
-        // Fetch movie details from OMDB
-        const omdbResponse = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&t=${encodeURIComponent(movieName)}`);
+        
+        const omdbResponse = await axios.get(`https:
         const movieData = omdbResponse.data;
 
         if (movieData.Response === 'True') {
