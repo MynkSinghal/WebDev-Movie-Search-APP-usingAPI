@@ -20,6 +20,10 @@
             "dest": "/public/css/$1"
         },
         {
+            "src": "/(.+\\.[a-zA-Z]+)$",
+            "dest": "/public/$1"
+        },
+        {
             "src": "/(.*)",
             "dest": "/src/app.js"
         }
