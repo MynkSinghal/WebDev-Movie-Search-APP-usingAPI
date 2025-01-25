@@ -6,6 +6,7 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const OMDB_API_KEY = process.env.OMDB_API_KEY || 'c9eb1bb2';
 
+app.set('views', path.join(__dirname, '../views'));
 app.set('view engine', 'ejs');
 app.use(express.static(path.join(__dirname, 'public')));
 app.use(express.urlencoded({ extended: true }));
