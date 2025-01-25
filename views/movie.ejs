@@ -3,38 +3,35 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
-
-    <title><%= movie.Title %></title>
-    <link rel="stylesheet" href="/styles.css">
+    <title>Movie Search Results</title>
+    <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="movie-background">
-            <div class="movie-container">
-                <div class="movie-card">
-                    <div class="movie-poster">
-                        <img src="<%= movie.Poster %>" alt="<%= movie.Title %> Poster">
+    <div class="container">
+        <h1>Search Results</h1>
+        
+        <% if (movie && movie.Search) { %>
+            <div class="movie-grid">
+                <% movie.Search.forEach(function(item) { %>
+                    <div class="movie-card">
+                        <% if (item.Poster && item.Poster !== "N/A") { %>
+                            <img src="<%= item.Poster %>" alt="<%= item.Title %> poster">
+                        <% } else { %>
+                            <div class="no-poster">No Poster Available</div>
+                        <% } %>
+                        <h2><%= item.Title %></h2>
+                        <p>Year: <%= item.Year %></p>
+                        <p>Type: <%= item.Type %></p>
+                        <p>IMDB ID: <%= item.imdbID %></p>
                     </div>
-                    <div class="movie-info">
-                        <h1><%= movie.Title %></h1>
-                        <p><strong>Year:</strong> <%= movie.Year %></p>
-                        <p><strong>Rated:</strong> <%= movie.Rated %></p>
-                        <p><strong>Released:</strong> <%= movie.Released %></p>
-                        <p><strong>Runtime:</strong> <%= movie.Runtime %></p>
-                        <p><strong>Genre:</strong> <%= movie.Genre %></p>
-                        <p><strong>Director:</strong> <%= movie.Director %></p>
-                        <p><strong>Writer:</strong> <%= movie.Writer %></p>
-                        <p><strong>Actors:</strong> <%= movie.Actors %></p>
-                        <p><strong>Plot:</strong> <%= movie.Plot %></p>
-                        <p><strong>Language:</strong> <%= movie.Language %></p>
-                        <p><strong>Country:</strong> <%= movie.Country %></p>
-                        <p><strong>Awards:</strong> <%= movie.Awards %></p>
-                        <p><strong>IMDB Rating:</strong> <%= movie.imdbRating %> (<%= movie.imdbVotes %> votes)</p>
-                    </div>
-                </div>
-                <a href="/">Back to Homepage</a>
+                <% }); %>
             </div>
-        </div>
+            <p>Total Results: <%= movie.totalResults %></p>
+        <% } else { %>
+            <p>No results found</p>
+        <% } %>
+        
+        <a href="/" class="back-button">Back to Search</a>
     </div>
 </body>
 </html>

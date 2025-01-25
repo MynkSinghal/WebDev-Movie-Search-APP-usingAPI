@@ -19,17 +19,17 @@ app.get('/', (req, res) => {
 app.post('/movie', async (req, res) => {
     const movieName = req.body.movieName;
     try {
-        
-        const omdbResponse = await axios.get(`https:
+        const omdbResponse = await axios.get(`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${movieName}`);
         const movieData = omdbResponse.data;
 
         if (movieData.Response === 'True') {
             res.render('movie', { movie: movieData });
         } else {
-            res.render('index', { error: 'Movie not found' });
+            res.render('index', { error: movieData.Error || 'Movie not found' });
         }
     } catch (error) {
-        res.render('index', { error: 'An error occurred' });
+        console.error('API Error:', error.response?.data || error.message);
+        res.render('index', { error: 'An error occurred while fetching movie data' });
     }
 });
 
