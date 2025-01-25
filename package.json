@@ -1,10 +1,11 @@
 {
   "name": "movie-search-app",
   "version": "1.0.0",
-  "main": "app.js",
+  "main": "src/app.js",
   "scripts": {
-    "start": "node app.js",
-    "build": "npm install"
+    "start": "node src/app.js",
+    "build": "mkdir -p dist && cp -r src/* dist/ && cp -r public dist/ && cp -r views dist/",
+    "dev": "nodemon src/app.js"
   },
   "keywords": [],
   "author": "",
