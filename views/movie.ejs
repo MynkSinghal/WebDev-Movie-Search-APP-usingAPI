@@ -4,34 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Movie Search Results</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="container">
-        <h1>Search Results</h1>
-        
-        <% if (movie && movie.Search) { %>
-            <div class="movie-grid">
-                <% movie.Search.forEach(function(item) { %>
-                    <div class="movie-card">
-                        <% if (item.Poster && item.Poster !== "N/A") { %>
-                            <img src="<%= item.Poster %>" alt="<%= item.Title %> poster">
-                        <% } else { %>
-                            <div class="no-poster">No Poster Available</div>
-                        <% } %>
-                        <h2><%= item.Title %></h2>
-                        <p>Year: <%= item.Year %></p>
-                        <p>Type: <%= item.Type %></p>
-                        <p>IMDB ID: <%= item.imdbID %></p>
+    <div class="background">
+        <div class="vignette">
+            <div class="container">
+                <header>
+                    <h1>Search Results</h1>
+                </header>
+                
+                <% if (movie && movie.Search) { %>
+                    <div class="movie-grid">
+                        <% movie.Search.forEach(function(item) { %>
+                            <div class="movie-card">
+                                <% if (item.Poster && item.Poster !== "N/A") { %>
+                                    <img src="<%= item.Poster %>" alt="<%= item.Title %> poster">
+                                <% } else { %>
+                                    <div class="no-poster">No Poster Available</div>
+                                <% } %>
+                                <h2><%= item.Title %></h2>
+                                <p>Year: <%= item.Year %></p>
+                                <p>Type: <%= item.Type %></p>
+                                <p>IMDB ID: <%= item.imdbID %></p>
+                            </div>
+                        <% }); %>
                     </div>
-                <% }); %>
+                    <p>Total Results: <%= movie.totalResults %></p>
+                <% } else { %>
+                    <p>No results found</p>
+                <% } %>
+                
+                <a href="/" class="back-button">Back to Search</a>
             </div>
-            <p>Total Results: <%= movie.totalResults %></p>
-        <% } else { %>
-            <p>No results found</p>
-        <% } %>
-        
-        <a href="/" class="back-button">Back to Search</a>
+        </div>
     </div>
 </body>
 </html>
