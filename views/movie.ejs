@@ -3,42 +3,253 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Movie Search Results</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap">
+    <title>Search Results - MovieFlix</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
-    <div class="background">
-        <div class="vignette">
-            <div class="container">
-                <header>
-                    <h1>Search Results</h1>
-                </header>
-                
-                <% if (movie && movie.Search) { %>
-                    <div class="movie-grid">
-                        <% movie.Search.forEach(function(item) { %>
-                            <div class="movie-card">
-                                <% if (item.Poster && item.Poster !== "N/A") { %>
-                                    <img src="<%= item.Poster %>" alt="<%= item.Title %> poster">
-                                <% } else { %>
-                                    <div class="no-poster">No Poster Available</div>
-                                <% } %>
-                                <h2><%= item.Title %></h2>
-                                <p>Year: <%= item.Year %></p>
-                                <p>Type: <%= item.Type %></p>
-                                <p>IMDB ID: <%= item.imdbID %></p>
-                            </div>
-                        <% }); %>
-                    </div>
-                    <p>Total Results: <%= movie.totalResults %></p>
-                <% } else { %>
-                    <p>No results found</p>
-                <% } %>
-                
-                <a href="/" class="back-button">Back to Search</a>
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-film"></i>
+                <span>MovieFlix</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="#" class="nav-link active">Search Results</a>
             </div>
         </div>
+    </nav>
+
+    <!-- Search Results Header -->
+    <section class="search-results-header">
+        <div class="container">
+            <div class="search-header-content">
+                <div class="search-info">
+                    <h1 class="search-title">
+                        Search Results for 
+                        <span class="gradient-text">"<%= searchQuery %>"</span>
+                    </h1>
+                    <p class="search-stats">
+                        <i class="fas fa-search"></i>
+                        Found <%= totalResults %> movies
+                    </p>
+                </div>
+                
+                <!-- New Search Form -->
+                <div class="new-search-container">
+                    <form action="/search" method="POST" class="search-form">
+                        <div class="search-input-container">
+                            <i class="fas fa-search search-icon"></i>
+                            <input 
+                                type="text" 
+                                name="movieName" 
+                                placeholder="Try another search..." 
+                                class="search-input"
+                                value="<%= searchQuery %>"
+                                autocomplete="off"
+                                required
+                            >
+                        </div>
+                        <button type="submit" class="search-btn">
+                            <i class="fas fa-search"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movie Results -->
+    <section class="search-results-content">
+        <div class="container">
+            <% if (movies && movies.length > 0) { %>
+                <div class="results-grid">
+                    <% movies.forEach(function(movie) { %>
+                        <div class="movie-result-card" onclick="window.location.href='/movie/<%= movie.id %>'">
+                            <div class="movie-poster">
+                                <% if (movie.poster_path) { %>
+                                    <img src="<%= imageBaseUrl %><%= movie.poster_path %>" alt="<%= movie.title %>" loading="lazy">
+                                <% } else { %>
+                                    <div class="no-poster">
+                                        <i class="fas fa-image"></i>
+                                        <span>No Image</span>
+                                    </div>
+                                <% } %>
+                                <div class="movie-overlay">
+                                    <div class="overlay-content">
+                                        <div class="movie-rating">
+                                            <i class="fas fa-star"></i>
+                                            <span><%= movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A' %></span>
+                                        </div>
+                                        <button class="view-details-btn">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span>View Details</span>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="movie-details">
+                                <h3 class="movie-title"><%= movie.title %></h3>
+                                <div class="movie-meta">
+                                    <span class="movie-year">
+                                        <i class="fas fa-calendar"></i>
+                                        <%= movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A' %>
+                                    </span>
+                                    <span class="movie-rating-small">
+                                        <i class="fas fa-star"></i>
+                                        <%= movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A' %>
+                                    </span>
+                                </div>
+                                <% if (movie.overview) { %>
+                                    <p class="movie-overview">
+                                        <%= movie.overview.length > 150 ? movie.overview.substring(0, 150) + '...' : movie.overview %>
+                                    </p>
+                                <% } %>
+                                <div class="movie-actions">
+                                    <button class="action-btn primary" onclick="event.stopPropagation(); window.location.href='/movie/<%= movie.id %>'">
+                                        <i class="fas fa-play"></i>
+                                        View Details
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    <% }); %>
+                </div>
+
+                <!-- Load More Button (if there are more results) -->
+                <% if (totalResults > 20) { %>
+                    <div class="load-more-container">
+                        <button class="load-more-btn" onclick="loadMoreResults()">
+                            <span>Load More Movies</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+                    </div>
+                <% } %>
+
+            <% } else { %>
+                <!-- No Results Found -->
+                <div class="no-results">
+                    <div class="no-results-icon">
+                        <i class="fas fa-film"></i>
+                    </div>
+                    <h2>No Movies Found</h2>
+                    <p>We couldn't find any movies matching "<%= searchQuery %>". Try:</p>
+                    <ul class="suggestions-list">
+                        <li>Checking your spelling</li>
+                        <li>Using different keywords</li>
+                        <li>Searching for the movie's original title</li>
+                        <li>Using fewer keywords</li>
+                    </ul>
+                </div>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Back to Home -->
+    <section class="back-section">
+        <div class="container">
+            <a href="/" class="back-home-btn">
+                <i class="fas fa-arrow-left"></i>
+                <span>Back to Home</span>
+            </a>
+        </div>
+    </section>
+
+    <!-- Error Display -->
+    <% if (error) { %>
+        <div class="error-banner">
+            <div class="container">
+                <div class="error-content">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <span><%= error %></span>
+                    <button class="error-close" onclick="this.parentElement.parentElement.style.display='none'">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    <% } %>
+
+    <!-- Loading Animation -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner">
+            <div class="spinner"></div>
+            <p>Loading more movies...</p>
+        </div>
     </div>
+
+    <script>
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            // Animate movie cards on load
+            const movieCards = document.querySelectorAll('.movie-result-card');
+            movieCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                    card.style.transform = 'translateY(0)';
+                }, index * 100);
+            });
+        });
+
+        // Removed watchlist functionality
+
+        // Load more results functionality
+        let currentPage = 1;
+        function loadMoreResults() {
+            currentPage++;
+            const loadingOverlay = document.getElementById('loadingOverlay');
+            loadingOverlay.style.display = 'flex';
+            
+            // This would typically make an AJAX request to load more results
+            setTimeout(() => {
+                loadingOverlay.style.display = 'none';
+                // Add new results to the grid
+                console.log('Loading page', currentPage);
+            }, 1500);
+        }
+
+        // Search form submission
+        document.querySelector('.search-form').addEventListener('submit', function() {
+            document.getElementById('loadingOverlay').style.display = 'flex';
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                window.location.href = '/';
+            }
+        });
+
+        // Enhanced movie card interactions
+        document.querySelectorAll('.movie-result-card').forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-8px)';
+            });
+            
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Lazy loading for images
+        const imageObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const img = entry.target;
+                    img.src = img.dataset.src;
+                    img.classList.add('loaded');
+                    imageObserver.unobserve(img);
+                }
+            });
+        });
+
+        document.querySelectorAll('img[data-src]').forEach(img => {
+            imageObserver.observe(img);
+        });
+    </script>
 </body>
 </html>

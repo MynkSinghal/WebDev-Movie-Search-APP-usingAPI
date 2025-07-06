@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= movie.title %> - MovieFlix</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/css/style.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <nav class="navbar navbar-transparent">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-film"></i>
+                <span>MovieFlix</span>
+            </div>
+            <div class="nav-links">
+                <a href="/" class="nav-link">Home</a>
+                <a href="javascript:history.back()" class="nav-link">
+                    <i class="fas fa-arrow-left"></i>
+                    Back
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Movie Hero Section -->
+    <section class="movie-hero">
+        <div class="hero-backdrop">
+            <% if (movie.backdrop_path) { %>
+                <img src="https://image.tmdb.org/t/p/w1280<%= movie.backdrop_path %>" alt="<%= movie.title %> backdrop">
+            <% } %>
+            <div class="hero-overlay"></div>
+        </div>
+        
+        <div class="container">
+            <div class="movie-hero-content">
+                <div class="movie-poster-large">
+                    <% if (movie.poster_path) { %>
+                        <img src="<%= imageBaseUrl %><%= movie.poster_path %>" alt="<%= movie.title %> poster">
+                    <% } else { %>
+                        <div class="no-poster-large">
+                            <i class="fas fa-image"></i>
+                            <span>No Poster</span>
+                        </div>
+                    <% } %>
+                </div>
+                
+                <div class="movie-info-main">
+                    <h1 class="movie-title-main"><%= movie.title %></h1>
+                    <% if (movie.original_title !== movie.title) { %>
+                        <p class="movie-original-title">Original: <%= movie.original_title %></p>
+                    <% } %>
+                    
+                    <div class="movie-meta-main">
+                        <div class="meta-item">
+                            <i class="fas fa-calendar"></i>
+                            <span><%= movie.release_date ? new Date(movie.release_date).getFullYear() : 'N/A' %></span>
+                        </div>
+                        <div class="meta-item">
+                            <i class="fas fa-clock"></i>
+                            <span><%= movie.runtime ? movie.runtime + ' min' : 'N/A' %></span>
+                        </div>
+                        <div class="meta-item rating">
+                            <i class="fas fa-star"></i>
+                            <span><%= movie.vote_average ? movie.vote_average.toFixed(1) : 'N/A' %>/10</span>
+                            <small>(<%= movie.vote_count || 0 %> votes)</small>
+                        </div>
+                    </div>
+                    
+                    <% if (movie.genres && movie.genres.length > 0) { %>
+                        <div class="genres">
+                            <% movie.genres.forEach(function(genre) { %>
+                                <span class="genre-tag"><%= genre.name %></span>
+                            <% }); %>
+                        </div>
+                    <% } %>
+                    
+                    <% if (movie.overview) { %>
+                        <p class="movie-overview-main"><%= movie.overview %></p>
+                    <% } %>
+                    
+                    <div class="movie-actions-main">
+                        <% if (videos && videos.length > 0) { %>
+                            <button class="action-btn primary large" onclick="playTrailer('<%= videos[0].key %>')">
+                                <i class="fas fa-play"></i>
+                                Watch Trailer
+                            </button>
+                        <% } %>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Movie Details Sections -->
+    <section class="movie-details-sections">
+        <div class="container">
+            
+            <!-- Cast Section -->
+            <% if (cast && cast.length > 0) { %>
+                <div class="detail-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-users"></i>
+                        Cast
+                    </h2>
+                    <div class="cast-grid">
+                        <% cast.forEach(function(person) { %>
+                            <div class="cast-card">
+                                <div class="cast-photo">
+                                    <% if (person.profile_path) { %>
+                                        <img src="<%= imageBaseUrl %><%= person.profile_path %>" alt="<%= person.name %>">
+                                    <% } else { %>
+                                        <div class="no-photo">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="cast-info">
+                                    <h4 class="cast-name"><%= person.name %></h4>
+                                    <p class="cast-character"><%= person.character %></p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Crew Section -->
+            <% if (crew && crew.length > 0) { %>
+                <div class="detail-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-camera"></i>
+                        Key Crew
+                    </h2>
+                    <div class="crew-grid">
+                        <% crew.forEach(function(person) { %>
+                            <div class="crew-card">
+                                <div class="crew-photo">
+                                    <% if (person.profile_path) { %>
+                                        <img src="<%= imageBaseUrl %><%= person.profile_path %>" alt="<%= person.name %>">
+                                    <% } else { %>
+                                        <div class="no-photo">
+                                            <i class="fas fa-user"></i>
+                                        </div>
+                                    <% } %>
+                                </div>
+                                <div class="crew-info">
+                                    <h4 class="crew-name"><%= person.name %></h4>
+                                    <p class="crew-job"><%= person.job %></p>
+                                </div>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Additional Movie Info -->
+            <div class="detail-section">
+                <h2 class="section-title">
+                    <i class="fas fa-info-circle"></i>
+                    Movie Information
+                </h2>
+                <div class="movie-info-grid">
+                    <div class="info-item">
+                        <h4>Release Date</h4>
+                        <p><%= movie.release_date ? new Date(movie.release_date).toLocaleDateString() : 'N/A' %></p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Budget</h4>
+                        <p><%= movie.budget ? '$' + movie.budget.toLocaleString() : 'N/A' %></p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Revenue</h4>
+                        <p><%= movie.revenue ? '$' + movie.revenue.toLocaleString() : 'N/A' %></p>
+                    </div>
+                    <div class="info-item">
+                        <h4>Status</h4>
+                        <p><%= movie.status || 'N/A' %></p>
+                    </div>
+                    <% if (movie.production_companies && movie.production_companies.length > 0) { %>
+                        <div class="info-item full-width">
+                            <h4>Production Companies</h4>
+                            <p><%= movie.production_companies.map(company => company.name).join(', ') %></p>
+                        </div>
+                    <% } %>
+                    <% if (movie.production_countries && movie.production_countries.length > 0) { %>
+                        <div class="info-item">
+                            <h4>Countries</h4>
+                            <p><%= movie.production_countries.map(country => country.name).join(', ') %></p>
+                        </div>
+                    <% } %>
+                    <% if (movie.spoken_languages && movie.spoken_languages.length > 0) { %>
+                        <div class="info-item">
+                            <h4>Languages</h4>
+                            <p><%= movie.spoken_languages.map(lang => lang.english_name).join(', ') %></p>
+                        </div>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Videos Section -->
+            <% if (videos && videos.length > 0) { %>
+                <div class="detail-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-video"></i>
+                        Videos & Trailers
+                    </h2>
+                    <div class="videos-grid">
+                        <% videos.forEach(function(video) { %>
+                            <div class="video-card" onclick="playTrailer('<%= video.key %>')">
+                                <div class="video-thumbnail">
+                                    <img src="https://img.youtube.com/vi/<%= video.key %>/hqdefault.jpg" alt="<%= video.name %>">
+                                    <div class="play-overlay">
+                                        <i class="fas fa-play"></i>
+                                    </div>
+                                </div>
+                                <h4 class="video-title"><%= video.name %></h4>
+                                <p class="video-type"><%= video.type %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+
+            <!-- Similar Movies Section -->
+            <% if (similar && similar.length > 0) { %>
+                <div class="detail-section">
+                    <h2 class="section-title">
+                        <i class="fas fa-film"></i>
+                        Similar Movies
+                    </h2>
+                    <div class="similar-movies-grid">
+                        <% similar.forEach(function(similarMovie) { %>
+                            <div class="similar-movie-card" onclick="window.location.href='/movie/<%= similarMovie.id %>'">
+                                <div class="similar-poster">
+                                    <% if (similarMovie.poster_path) { %>
+                                        <img src="<%= imageBaseUrl %><%= similarMovie.poster_path %>" alt="<%= similarMovie.title %>">
+                                    <% } else { %>
+                                        <div class="no-poster">
+                                            <i class="fas fa-image"></i>
+                                        </div>
+                                    <% } %>
+                                    <div class="similar-overlay">
+                                        <div class="similar-rating">
+                                            <i class="fas fa-star"></i>
+                                            <span><%= similarMovie.vote_average ? similarMovie.vote_average.toFixed(1) : 'N/A' %></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <h4 class="similar-title"><%= similarMovie.title %></h4>
+                                <p class="similar-year"><%= similarMovie.release_date ? new Date(similarMovie.release_date).getFullYear() : 'N/A' %></p>
+                            </div>
+                        <% }); %>
+                    </div>
+                </div>
+            <% } %>
+        </div>
+    </section>
+
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="video-modal-content">
+            <div class="video-container">
+                <iframe id="videoIframe" width="100%" height="100%" frameborder="0" allowfullscreen></iframe>
+            </div>
+            <button class="video-close" onclick="closeVideo()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Back to Top -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // Play trailer functionality
+        function playTrailer(videoKey) {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = `https://www.youtube.com/embed/${videoKey}?autoplay=1`;
+            modal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeVideo() {
+            const modal = document.getElementById('videoModal');
+            const iframe = document.getElementById('videoIframe');
+            iframe.src = '';
+            modal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        // Back to top functionality
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 600) {
+                backToTop.style.display = 'flex';
+            } else {
+                backToTop.style.display = 'none';
+            }
+        });
+
+        // Close video modal on escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closeVideo();
+            }
+        });
+
+        // Close video modal when clicking outside
+        document.getElementById('videoModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeVideo();
+            }
+        });
+
+        // Removed parallax effect to fix scrolling issues
+
+        // Animate sections on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('animate-in');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.detail-section').forEach(section => {
+            observer.observe(section);
+        });
+    </script>
+</body>
+</html> 

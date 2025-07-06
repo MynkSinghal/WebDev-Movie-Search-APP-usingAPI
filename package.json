@@ -1,22 +1,43 @@
 {
-  "name": "movie-search-app",
-  "version": "1.0.0",
+  "name": "movieflix-search-app",
+  "version": "2.0.0",
+  "description": "A modern movie discovery app powered by TMDB API with beautiful UI and comprehensive movie details",
   "main": "src/app.js",
   "scripts": {
     "start": "node src/app.js",
     "build": "mkdir -p dist && cp -r src/* dist/ && cp -r public dist/ && cp -r views dist/",
     "dev": "nodemon src/app.js"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
+  "keywords": [
+    "movie",
+    "search",
+    "tmdb",
+    "film",
+    "cinema",
+    "entertainment",
+    "express",
+    "nodejs"
+  ],
+  "author": "MovieFlix Team",
+  "license": "MIT",
   "dependencies": {
     "axios": "^1.6.7",
+    "dotenv": "^16.6.1",
     "ejs": "^3.1.9",
     "express": "^4.18.2"
   },
+  "devDependencies": {
+    "nodemon": "^3.1.10"
+  },
   "engines": {
     "node": ">=14.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/movieflix-search-app.git"
+  },
+  "bugs": {
+    "url": "https://github.com/yourusername/movieflix-search-app/issues"
+  },
+  "homepage": "https://github.com/yourusername/movieflix-search-app#readme"
 }
