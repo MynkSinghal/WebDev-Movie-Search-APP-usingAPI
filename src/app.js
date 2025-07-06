@@ -2,8 +2,23 @@ require('dotenv').config();
 const express = require('express');
 const axios = require('axios');
 const path = require('path');
+require('dotenv').config();
 
 const app = express();
+
+// CORS middleware to handle cross-origin requests
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+    
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
 const PORT = process.env.PORT || 3000;
 const TMDB_API_KEY = process.env.TMDB_API_KEY; // Your API key as fallback
 const TMDB_BASE_URL = 'https://api.themoviedb.org/3';
@@ -162,8 +177,17 @@ app.get('/movie/:id', async (req, res) => {
 // API endpoint for search suggestions (for autocomplete)
 app.get('/api/search/:query', async (req, res) => {
     try {
+        // Add CORS headers specifically for this endpoint
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Content-Type', 'application/json');
+        
+        const query = req.params.query;
+        if (!query || query.trim().length < 1) {
+            return res.status(400).json({ error: 'Query parameter is required' });
+        }
+        
         const searchResults = await tmdbRequest('/search/movie', {
-            query: req.params.query,
+            query: query.trim(),
             include_adult: false
         });
         
@@ -176,7 +200,12 @@ app.get('/api/search/:query', async (req, res) => {
             }))
         });
     } catch (error) {
-        res.status(500).json({ error: 'Search failed' });
+        console.error('Search API Error:', error.message);
+        res.status(500).json({ 
+            error: 'Search failed', 
+            message: error.message,
+            details: 'Unable to fetch search results from TMDB API'
+        });
     }
 });
 
@@ -191,6 +220,29 @@ app.use((err, req, res, next) => {
     });
 });
 
+// Health check endpoint for deployment diagnostics
+app.get('/api/health', (req, res) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Content-Type', 'application/json');
+    
+    const health = {
+        status: 'ok',
+        timestamp: new Date().toISOString(),
+        environment: {
+            nodeVersion: process.version,
+            port: PORT,
+            hasApiKey: !!TMDB_API_KEY,
+            hasAccessToken: !!process.env.TMDB_ACCESS_TOKEN
+        },
+        endpoints: {
+            search: '/api/search/:query',
+            health: '/api/health'
+        }
+    };
+    
+    res.json(health);
+});
+
 // Handle 404
 app.use((req, res) => {
     res.status(404).render('index', { 
@@ -202,9 +254,22 @@ app.use((req, res) => {
 });
 
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT}`);
-    console.log('Note: Please set your TMDB_API_KEY environment variable');
-    console.log('Get your API key from: https://www.themoviedb.org/settings/api');
+    console.log(`🎬 MovieFlix server is running on port ${PORT}`);
+    console.log(`🌐 Server URL: http://localhost:${PORT}`);
+    console.log(`💾 Environment: ${process.env.NODE_ENV || 'development'}`);
+    
+    // API Configuration status
+    if (TMDB_API_KEY || process.env.TMDB_ACCESS_TOKEN) {
+        console.log('✅ TMDB API credentials configured');
+    } else {
+        console.log('❌ TMDB API credentials missing!');
+        console.log('   Please set TMDB_API_KEY or TMDB_ACCESS_TOKEN environment variable');
+        console.log('   Get your API key from: https://www.themoviedb.org/settings/api');
+    }
+    
+    console.log('📡 API Endpoints:');
+    console.log(`   Health Check: http://localhost:${PORT}/api/health`);
+    console.log(`   Search: http://localhost:${PORT}/api/search/:query`);
 });
 
 module.exports = app;
